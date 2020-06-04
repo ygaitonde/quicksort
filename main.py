@@ -1,16 +1,17 @@
 import statistics
+counter = 0
 
 def choosePivot(a,l,r,s):
   n = r-l
   first = l
-  last = r-1
+  last = r
   mid = n//2-1 if n%2==0 else n//2
-  if(s=="left"):
+  if(s=="l"):
     return first
-  if(s=="right"):
+  if(s=="r"):
     return last
-  if(s=="median"):
-    return statistics.median([a[first],a[last],mid])
+  if(s=="m"):
+    return statistics.median([a[first],a[last],a[mid]])
 
 def swap(a,i,j):
   temp = a[i]
@@ -18,24 +19,27 @@ def swap(a,i,j):
   a[j] = temp
 
 def partition(a,l,r):
-  p=a[l]
-  i=l+1
+  p = a[l]
+  i = l+1
   for j in range(l+1,r+1):
-      if(a[j]<p):
-          swap(a,j,i)
-          i+=1
+    if(a[j] < p):
+      swap(a, i, j)
+      i+=1
+    global counter
+    counter+=1
   swap(a,l,i-1)
-  
-def quickSort(a,l,r):
-  n = r-l
-  if(n<=1):
-    return
-  p = l
-  val = a[p]
-  partition(a,l,r)
-  quickSort(a,0,val)
-  quickSort(a,val,r-1)
+  return i-1
 
-a = [5,3,6,2,4,1]
-quickSort(a,0,len(a)-1)
+def quicksort(a,l,r):
+  if r-l<=1:
+    return
+  p = choosePivot(a,l,r,"l")
+  swap(a,l,p)
+  val = partition(a,l,r)
+  quicksort(a,0,val-1)
+  quicksort(a,val+1, r-l+1)
+
+a = [6,5,12,4,3,2,1]
+quicksort(a,0,len(a)-1)
 print(a)
+print(counter)
